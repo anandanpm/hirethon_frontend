@@ -4,6 +4,7 @@ import { getRooms, getMessages } from '../services/rocketchat';
 import RoomList from './RoomList';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
+import TeamView from './TeamView';
 import './ChatLayout.css';
 
 const ChatLayout = () => {
@@ -13,6 +14,7 @@ const ChatLayout = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [activeView, setActiveView] = useState('rooms'); // 'rooms' or 'team'
 
   // Load rooms on mount
   useEffect(() => {
@@ -138,11 +140,30 @@ const ChatLayout = () => {
       
       <div className="chat-content">
         <div className="sidebar">
-          <RoomList 
-            rooms={rooms} 
-            currentRoom={currentRoom} 
-            onRoomSelect={handleRoomSelect} 
-          />
+          <div className="sidebar-nav">
+            <button 
+              className={`nav-btn ${activeView === 'rooms' ? 'active' : ''}`}
+              onClick={() => setActiveView('rooms')}
+            >
+              💬 Channels
+            </button>
+            <button 
+              className={`nav-btn ${activeView === 'team' ? 'active' : ''}`}
+              onClick={() => setActiveView('team')}
+            >
+              👥 Team View
+            </button>
+          </div>
+          
+          {activeView === 'rooms' ? (
+            <RoomList 
+              rooms={rooms} 
+              currentRoom={currentRoom} 
+              onRoomSelect={handleRoomSelect} 
+            />
+          ) : (
+            <TeamView />
+          )}
         </div>
         
         <div className="chat-area">

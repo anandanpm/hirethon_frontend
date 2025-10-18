@@ -137,6 +137,114 @@ export const getRoomInfo = async (roomId, authToken, userId) => {
   }
 };
 
+// Get user presence information
+export const getUserPresence = async (authToken, userId) => {
+  try {
+    const response = await api.get('/users.presence', {
+      headers: getAuthHeaders(authToken, userId),
+    });
+    return {
+      success: true,
+      presence: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get user presence',
+    };
+  }
+};
+
+// Get all users in workspace
+export const getAllUsers = async (authToken, userId) => {
+  try {
+    const response = await api.get('/users.list', {
+      headers: getAuthHeaders(authToken, userId),
+    });
+    return {
+      success: true,
+      users: response.data.users || [],
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get users list',
+    };
+  }
+};
+
+// Get user status
+export const getUserStatus = async (authToken, userId) => {
+  try {
+    const response = await api.get('/users.getStatus', {
+      headers: getAuthHeaders(authToken, userId),
+    });
+    return {
+      success: true,
+      status: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get user status',
+    };
+  }
+};
+
+// Get user's current room
+export const getUserCurrentRoom = async (userId, authToken, currentUserId) => {
+  try {
+    const response = await api.get(`/users.getPresence?userId=${userId}`, {
+      headers: getAuthHeaders(authToken, currentUserId),
+    });
+    return {
+      success: true,
+      room: response.data.room || null,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get user current room',
+    };
+  }
+};
+
+// Get detailed user info including lastLogin
+export const getUsersInfo = async (userId, authToken, currentUserId) => {
+  try {
+    const response = await api.get(`/users.info?userId=${userId}`, {
+      headers: getAuthHeaders(authToken, currentUserId),
+    });
+    return {
+      success: true,
+      user: response.data.user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get user info',
+    };
+  }
+};
+
+// Get user presence by userId
+export const getUsersPresenceById = async (userId, authToken, currentUserId) => {
+  try {
+    const response = await api.get(`/users.getPresence?userId=${userId}`, {
+      headers: getAuthHeaders(authToken, currentUserId),
+    });
+    return {
+      success: true,
+      presence: response.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.response?.data?.error || 'Failed to get user presence',
+    };
+  }
+};
+
 // Logout
 export const logout = async (authToken, userId) => {
   try {
